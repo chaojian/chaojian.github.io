@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="lichaojian&#39;s blogs">
 <meta property="og:description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522049912826.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522072079342.jpg">
-<meta property="og:updated_time" content="2019-03-10T09:20:37.684Z">
+<meta property="og:image" content="https://github.com/chaojian/chaojian.github.io/blob/master/images/blog/handler-1.jpg">
+<meta property="og:image" content="https://github.com/chaojian/chaojian.github.io/blob/master/images/blog/handler-2.jpg">
+<meta property="og:updated_time" content="2019-03-10T09:36:53.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android消息传递机制Handler-使用篇">
 <meta name="twitter:description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
-<meta name="twitter:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522049912826.jpg">
+<meta name="twitter:image" content="https://github.com/chaojian/chaojian.github.io/blob/master/images/blog/handler-1.jpg">
 
 
 
@@ -302,13 +302,13 @@
       
 
       
-        <h2 id="1-Handler到底有什么用-？"><a href="#1-Handler到底有什么用-？" class="headerlink" title="1. Handler到底有什么用 ？"></a>1. Handler到底有什么用 ？</h2><p>作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：<br><img src="media/15522042121783/15522049912826.jpg" alt><br>来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）</p>
+        <h2 id="1-Handler到底有什么用-？"><a href="#1-Handler到底有什么用-？" class="headerlink" title="1. Handler到底有什么用 ？"></a>1. Handler到底有什么用 ？</h2><p>作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：<br><img src="https://github.com/chaojian/chaojian.github.io/blob/master/images/blog/handler-1.jpg" alt><br>来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）</p>
 <ol>
 <li>用于在特定时间内执行的Message和Runnable。</li>
 <li>用于在不同的线程中执行任务。</li>
 </ol>
 <h2 id="2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><a href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。" class="headerlink" title="2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"></a>2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</h2><p>我们再来先看官方文档的解释，Handler到底给我们提供了哪些传递消息的接口，如下截图标注的四个方法：</p>
-<p><img src="media/15522042121783/15522072079342.jpg" alt></p>
+<p><img src="https://github.com/chaojian/chaojian.github.io/blob/master/images/blog/handler-2.jpg" alt></p>
 <p>1：通过Runnable，post不延时执行，postDelayed则延时执行，延时的时间作为参数传递。</p>
 <p>2：通过Message，sendMessage不延时执行，sendMessageDelayed则延时执行，延时时间作为参数传递。</p>
 <h3 id="2-1-如何利用Handler执行定时任务。"><a href="#2-1-如何利用Handler执行定时任务。" class="headerlink" title="2.1. 如何利用Handler执行定时任务。"></a>2.1. 如何利用Handler执行定时任务。</h3><ol>
