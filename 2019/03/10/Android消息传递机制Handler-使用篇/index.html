@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="Android的消息传递机制-Handler（使用篇）1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Han">
+<meta name="description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android消息传递机制Handler-使用篇">
 <meta property="og:url" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/index.html">
 <meta property="og:site_name" content="lichaojian&#39;s blogs">
-<meta property="og:description" content="Android的消息传递机制-Handler（使用篇）1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Han">
+<meta property="og:description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522049912826.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522072079342.jpg">
-<meta property="og:updated_time" content="2019-03-10T09:13:20.735Z">
+<meta property="og:updated_time" content="2019-03-10T09:18:31.998Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android消息传递机制Handler-使用篇">
-<meta name="twitter:description" content="Android的消息传递机制-Handler（使用篇）1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Han">
+<meta name="twitter:description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
 <meta name="twitter:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522049912826.jpg">
 
 
@@ -302,7 +302,7 @@
       
 
       
-        <h1 id="Android的消息传递机制-Handler（使用篇）"><a href="#Android的消息传递机制-Handler（使用篇）" class="headerlink" title="Android的消息传递机制-Handler（使用篇）"></a>Android的消息传递机制-Handler（使用篇）</h1><h2 id="1-Handler到底有什么用-？"><a href="#1-Handler到底有什么用-？" class="headerlink" title="1. Handler到底有什么用 ？"></a>1. Handler到底有什么用 ？</h2><p>作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：<br><img src="media/15522042121783/15522049912826.jpg" alt><br>来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）</p>
+        <h2 id="1-Handler到底有什么用-？"><a href="#1-Handler到底有什么用-？" class="headerlink" title="1. Handler到底有什么用 ？"></a>1. Handler到底有什么用 ？</h2><p>作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：<br><img src="media/15522042121783/15522049912826.jpg" alt><br>来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）</p>
 <ol>
 <li>用于在特定时间内执行的Message和Runnable。</li>
 <li>用于在不同的线程中执行任务。</li>
@@ -458,7 +458,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android的消息传递机制-Handler（使用篇）"><span class="nav-number">1.</span> <span class="nav-text">Android的消息传递机制-Handler（使用篇）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Handler到底有什么用-？"><span class="nav-number">1.1.</span> <span class="nav-text">1. Handler到底有什么用 ？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><span class="nav-number">1.2.</span> <span class="nav-text">2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-怎么利用Handler在不同的线程中进行消息的传递呢？"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.2 怎么利用Handler在不同的线程中进行消息的传递呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-未完待续…-Android的消息传递机制-Handler（原理篇）"><span class="nav-number">1.3.</span> <span class="nav-text">3.未完待续… (Android的消息传递机制-Handler（原理篇）)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Handler到底有什么用-？"><span class="nav-number">1.</span> <span class="nav-text">1. Handler到底有什么用 ？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><span class="nav-number">2.</span> <span class="nav-text">2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-怎么利用Handler在不同的线程中进行消息的传递呢？"><span class="nav-number">2.1.</span> <span class="nav-text">2.2 怎么利用Handler在不同的线程中进行消息的传递呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-未完待续…-Android的消息传递机制-Handler（原理篇）"><span class="nav-number">3.</span> <span class="nav-text">3.未完待续… (Android的消息传递机制-Handler（原理篇）)</span></a></li></ol></div>
             
 
           </div>
