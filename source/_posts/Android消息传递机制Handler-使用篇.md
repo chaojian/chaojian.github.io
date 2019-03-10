@@ -6,7 +6,7 @@ date: 2019-03-10 17:11:59
 
 ## 1. Handler到底有什么用 ？
 作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：
-![](media/15522042121783/15522049912826.jpg)
+![](https://raw.githubusercontent.com/chaojian/chaojian.github.io/master/images/blog/handler-1.jpg)
 来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）
 
 1. 用于在特定时间内执行的Message和Runnable。
@@ -16,7 +16,7 @@ date: 2019-03-10 17:11:59
 
 我们再来先看官方文档的解释，Handler到底给我们提供了哪些传递消息的接口，如下截图标注的四个方法：
 
-![](media/15522042121783/15522072079342.jpg)
+![](https://raw.githubusercontent.com/chaojian/chaojian.github.io/master/images/blog/handler-2.jpg)
 
 1：通过Runnable，post不延时执行，postDelayed则延时执行，延时的时间作为参数传递。
 
