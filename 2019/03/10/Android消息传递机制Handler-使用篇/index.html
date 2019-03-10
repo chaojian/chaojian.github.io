@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522049912826.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/media/15522042121783/15522072079342.jpg">
-<meta property="og:updated_time" content="2019-03-10T09:18:31.998Z">
+<meta property="og:updated_time" content="2019-03-10T09:20:37.684Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android消息传递机制Handler-使用篇">
 <meta name="twitter:description" content="1. Handler到底有什么用 ？作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）  用于在特定时间内执行的Message和Runnable。 用于在不同的线程中执行任务。  2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。我们再来先看官方文档的解释，Ha">
@@ -311,8 +311,7 @@
 <p><img src="media/15522042121783/15522072079342.jpg" alt></p>
 <p>1：通过Runnable，post不延时执行，postDelayed则延时执行，延时的时间作为参数传递。</p>
 <p>2：通过Message，sendMessage不延时执行，sendMessageDelayed则延时执行，延时时间作为参数传递。</p>
-<p>###2.1. 如何利用Handler执行定时任务。</p>
-<ol>
+<h3 id="2-1-如何利用Handler执行定时任务。"><a href="#2-1-如何利用Handler执行定时任务。" class="headerlink" title="2.1. 如何利用Handler执行定时任务。"></a>2.1. 如何利用Handler执行定时任务。</h3><ol>
 <li>利用Runnable来实现</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler mHandler = new Handler();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        mHandler.postDelayed(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                Log.d(&quot;Runnable&quot;, &quot;welcome to lichaojian&apos;s blog&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, 5000);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -458,7 +457,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Handler到底有什么用-？"><span class="nav-number">1.</span> <span class="nav-text">1. Handler到底有什么用 ？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><span class="nav-number">2.</span> <span class="nav-text">2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-怎么利用Handler在不同的线程中进行消息的传递呢？"><span class="nav-number">2.1.</span> <span class="nav-text">2.2 怎么利用Handler在不同的线程中进行消息的传递呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-未完待续…-Android的消息传递机制-Handler（原理篇）"><span class="nav-number">3.</span> <span class="nav-text">3.未完待续… (Android的消息传递机制-Handler（原理篇）)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Handler到底有什么用-？"><span class="nav-number">1.</span> <span class="nav-text">1. Handler到底有什么用 ？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><span class="nav-number">2.</span> <span class="nav-text">2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-如何利用Handler执行定时任务。"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 如何利用Handler执行定时任务。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-怎么利用Handler在不同的线程中进行消息的传递呢？"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 怎么利用Handler在不同的线程中进行消息的传递呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-未完待续…-Android的消息传递机制-Handler（原理篇）"><span class="nav-number">3.</span> <span class="nav-text">3.未完待续… (Android的消息传递机制-Handler（原理篇）)</span></a></li></ol></div>
             
 
           </div>
