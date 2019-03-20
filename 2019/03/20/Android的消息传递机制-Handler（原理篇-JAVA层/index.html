@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="lichaojian&#39;s blogs">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="从上一篇文章Android消息传递机制Handler-使用篇我们已经知道Handler的应用场景以及怎样使用Handler，本篇文章将从源码的层面，分析Handler的原理。 1. 先来看一下Handler的构造函数12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android的消息传递机制-Handler（原理篇-JAVA层）.md">
+<meta property="og:url" content="http://yoursite.com/2019/03/20/Android的消息传递机制-Handler（原理篇-JAVA层/index.html">
 <meta property="og:site_name" content="lichaojian&#39;s blogs">
+<meta property="og:description" content="从上一篇文章Android消息传递机制Handler-使用篇我们已经知道Handler的应用场景以及怎样使用Handler，本篇文章将从源码的层面，分析Handler的原理。 1. 先来看一下Handler的构造函数12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-20T12:01:48.291Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lichaojian&#39;s blogs">
+<meta name="twitter:title" content="Android的消息传递机制-Handler（原理篇-JAVA层）.md">
+<meta name="twitter:description" content="从上一篇文章Android消息传递机制Handler-使用篇我们已经知道Handler的应用场景以及怎样使用Handler，本篇文章将从源码的层面，分析Handler的原理。 1. 先来看一下Handler的构造函数12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/20/Android的消息传递机制-Handler（原理篇-JAVA层/">
 
 
 
 
 
-  <title>lichaojian's blogs</title>
+  <title>Android的消息传递机制-Handler（原理篇-JAVA层）.md | lichaojian's blogs</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/20/Android的消息传递机制-Handler（原理篇-JAVA层/" itemprop="url">Android的消息传递机制-Handler（原理篇-JAVA层）.md</a></h1>
+          <h1 class="post-title" itemprop="name headline">Android的消息传递机制-Handler（原理篇-JAVA层）.md</h1>
         
 
         <div class="post-meta">
@@ -298,9 +299,7 @@
       
 
       
-        
-          
-            <p>从上一篇文章<a href="https://chaojian.github.io/2019/03/10/Android%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6Handler-%E4%BD%BF%E7%94%A8%E7%AF%87/" target="_blank" rel="noopener">Android消息传递机制Handler-使用篇</a>我们已经知道Handler的应用场景以及怎样使用Handler，本篇文章将从源码的层面，分析Handler的原理。</p>
+        <p>从上一篇文章<a href="https://chaojian.github.io/2019/03/10/Android%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6Handler-%E4%BD%BF%E7%94%A8%E7%AF%87/" target="_blank" rel="noopener">Android消息传递机制Handler-使用篇</a>我们已经知道Handler的应用场景以及怎样使用Handler，本篇文章将从源码的层面，分析Handler的原理。</p>
 <h2 id="1-先来看一下Handler的构造函数"><a href="#1-先来看一下Handler的构造函数" class="headerlink" title="1. 先来看一下Handler的构造函数"></a>1. 先来看一下Handler的构造函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">// Handler.java</span><br><span class="line">public Handler() &#123;</span><br><span class="line">    this(null, false);</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">public Handler(Callback callback) &#123;</span><br><span class="line">    this(callback, false);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">public Handler(Looper looper) &#123;</span><br><span class="line">    this(looper, null, false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public Handler(Looper looper, Callback callback) &#123;</span><br><span class="line">    this(looper, callback, false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@hide</span><br><span class="line">public Handler(boolean async) &#123;</span><br><span class="line">    this(null, async);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@hide</span><br><span class="line">public Handler(Callback callback, boolean async) &#123;</span><br><span class="line">        if (FIND_POTENTIAL_LEAKS) &#123;</span><br><span class="line">            final Class&lt;? extends Handler&gt; klass = getClass();</span><br><span class="line">            if ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &amp;&amp;</span><br><span class="line">                    (klass.getModifiers() &amp; Modifier.STATIC) == 0) &#123;</span><br><span class="line">                Log.w(TAG, &quot;The following Handler class should be static or leaks might occur: &quot; +</span><br><span class="line">                    klass.getCanonicalName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        mLooper = Looper.myLooper();</span><br><span class="line">        if (mLooper == null) &#123;</span><br><span class="line">            throw new RuntimeException(</span><br><span class="line">                &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        mQueue = mLooper.mQueue;</span><br><span class="line">        mCallback = callback;</span><br><span class="line">        mAsynchronous = async;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@hide</span><br><span class="line">public Handler(Looper looper, Callback callback, boolean async) &#123;</span><br><span class="line">        mLooper = looper;</span><br><span class="line">        mQueue = looper.mQueue;</span><br><span class="line">        mCallback = callback;</span><br><span class="line">        mAsynchronous = async;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>从上述的构造函数可以知道，实际上通过外部创建的Handler最终都会调到以下两个hide的构造函数，分析两者的共同点：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//Handler.java</span><br><span class="line">@hide</span><br><span class="line">public Handler(Callback callback, boolean async) &#123;</span><br><span class="line">        ...</span><br><span class="line">        mLooper = Looper.myLooper();</span><br><span class="line">        if (mLooper == null) &#123;</span><br><span class="line">            throw new RuntimeException(</span><br><span class="line">                &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        mQueue = mLooper.mQueue;</span><br><span class="line">        mCallback = callback;</span><br><span class="line">        mAsynchronous = async;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@hide</span><br><span class="line">public Handler(Looper looper, Callback callback, boolean async) &#123;</span><br><span class="line">    mLooper = looper;</span><br><span class="line">    mQueue = looper.mQueue;</span><br><span class="line">    mCallback = callback;</span><br><span class="line">    mAsynchronous = async;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -372,8 +371,6 @@
 <p><strong>4. 通过MessageQueue的enqueueMessage方法按照时间排序构建消息链表，然后通过</strong></p>
 <p><strong>5. 通过步骤4的loop死循环，不断的获取消息，获取到消息，则调用对应的Handler的dispatchMessage方法来进行对应的消息处理</strong></p>
 
-          
-        
       
     </div>
     
@@ -390,156 +387,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/10/Android消息传递机制Handler-使用篇/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="lichaojian">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lichaojian's blogs">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/10/Android消息传递机制Handler-使用篇/" itemprop="url">Android消息传递机制Handler-使用篇</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T17:11:59+08:00">
-                2019-03-10
-              </time>
+              <a href="/2019/03/10/Android消息传递机制Handler-使用篇/" rel="next" title="Android消息传递机制Handler-使用篇">
+                <i class="fa fa-chevron-left"></i> Android消息传递机制Handler-使用篇
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="1-Handler到底有什么用-？"><a href="#1-Handler到底有什么用-？" class="headerlink" title="1. Handler到底有什么用 ？"></a>1. Handler到底有什么用 ？</h2><p>作为一个程序员，想知道这个类到底是干嘛用的，很简单，查看源码，看官方的文档。如下图所示：<br><img src="https://raw.githubusercontent.com/chaojian/chaojian.github.io/master/images/blog/handler-1.jpg" alt><br>来自官方的解释，Hander的作用有如下两点：（忽略我蹩脚的中文搬运工）</p>
-<ol>
-<li>用于在特定时间内执行的Message和Runnable。</li>
-<li>用于在不同的线程中执行任务。</li>
-</ol>
-<h2 id="2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"><a href="#2-知道了Handler有什么用，那么就要说一下Handler到底该怎么用。" class="headerlink" title="2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。"></a>2. 知道了Handler有什么用，那么就要说一下Handler到底该怎么用。</h2><p>我们再来先看官方文档的解释，Handler到底给我们提供了哪些传递消息的接口，如下截图标注的四个方法：</p>
-<p><img src="https://raw.githubusercontent.com/chaojian/chaojian.github.io/master/images/blog/handler-2.jpg" alt></p>
-<p>1：通过Runnable，post不延时执行，postDelayed则延时执行，延时的时间作为参数传递。</p>
-<p>2：通过Message，sendMessage不延时执行，sendMessageDelayed则延时执行，延时时间作为参数传递。</p>
-<h3 id="2-1-如何利用Handler执行定时任务。"><a href="#2-1-如何利用Handler执行定时任务。" class="headerlink" title="2.1. 如何利用Handler执行定时任务。"></a>2.1. 如何利用Handler执行定时任务。</h3><ol>
-<li>利用Runnable来实现</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler mHandler = new Handler();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        mHandler.postDelayed(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                Log.d(&quot;Runnable&quot;, &quot;welcome to lichaojian&apos;s blog&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, 5000);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>利用Message来实现，这里的Message与Runnable稍微有点不同，需要实现Handler.Callback回调来处理消息，如下源码：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler mHandler = new Handler(new Handler.Callback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public boolean handleMessage(Message msg) &#123;</span><br><span class="line">            switch (msg.what) &#123;</span><br><span class="line">                case 1:</span><br><span class="line">                    Log.d(&quot;Message&quot;, &quot;welcome to lichaojian&apos;s blog&quot;);</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        Message message = new Message();</span><br><span class="line">        message.what = 1;</span><br><span class="line">        mHandler.sendMessageDelayed(message, 5000);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-2-怎么利用Handler在不同的线程中进行消息的传递呢？"><a href="#2-2-怎么利用Handler在不同的线程中进行消息的传递呢？" class="headerlink" title="2.2 怎么利用Handler在不同的线程中进行消息的传递呢？"></a>2.2 怎么利用Handler在不同的线程中进行消息的传递呢？</h3><ol>
-<li>利用Runnable来实现</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler mHandler = new Handler();</span><br><span class="line"></span><br><span class="line">    private Runnable mMainThreadRunnable = new Runnable() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            Log.d(&quot;lichaojian&quot;, &quot;ThreaName = &quot; + Thread.currentThread().getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        findViewById(R.id.testHandler).setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                new Thread(new Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        Log.d(&quot;lichaojian&quot;, &quot;ThreadName = &quot; + Thread.currentThread().getName());</span><br><span class="line">                        mHandler.postDelayed(mMainThreadRunnable, 5000);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>利用Message来实现</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler mHandler = new Handler(new Handler.Callback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public boolean handleMessage(Message msg) &#123;</span><br><span class="line">            switch (msg.what) &#123;</span><br><span class="line">                case 1:</span><br><span class="line">                    Log.d(&quot;lichaojian&quot;, &quot;ThreadName = &quot; + Thread.currentThread().getName());</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        findViewById(R.id.testHandler).setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                new Thread(new Runnable() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void run() &#123;</span><br><span class="line">                        Log.d(&quot;lichaojian&quot;, &quot;ThreadName = &quot; + Thread.currentThread().getName());</span><br><span class="line">                        Message message = new Message();</span><br><span class="line">                        message.what = 1;</span><br><span class="line">                        mHandler.sendMessageDelayed(message, 5000);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-未完待续…-Android的消息传递机制-Handler（原理篇）"><a href="#3-未完待续…-Android的消息传递机制-Handler（原理篇）" class="headerlink" title="3.未完待续… (Android的消息传递机制-Handler（原理篇）)"></a>3.未完待续… (Android的消息传递机制-Handler（原理篇）)</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -549,10 +418,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -560,6 +430,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -580,8 +454,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +506,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-先来看一下Handler的构造函数"><span class="nav-number">1.</span> <span class="nav-text">1. 先来看一下Handler的构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-创建完Handler后，Handler的消息传递的原理是怎样的呢？"><span class="nav-number">2.</span> <span class="nav-text">2. 创建完Handler后，Handler的消息传递的原理是怎样的呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Handler是如何构建消息队列的。"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Handler是如何构建消息队列的。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-MessageQueue的消息队列是如何被处理的？"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 MessageQueue的消息队列是如何被处理的？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-总结：至此，Java层结合MessageQueue、Looper以及Handler来分析了Handler的消息传递机制。"><span class="nav-number">3.</span> <span class="nav-text">3. 总结：至此，Java层结合MessageQueue、Looper以及Handler来分析了Handler的消息传递机制。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -756,6 +655,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
