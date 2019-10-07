@@ -229,6 +229,196 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/07/Ubuntu 16.04 编译Flutter Engine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lichaojian">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lichaojian's blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/07/Ubuntu 16.04 编译Flutter Engine/" itemprop="url">Ubuntu 16.04 编译Flutter Engine.md</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-07T09:07:16+08:00">
+                2019-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Linxu-编译-Flutter-Engine（Ubuntu-16-04LST）"><a href="#Linxu-编译-Flutter-Engine（Ubuntu-16-04LST）" class="headerlink" title="Linxu 编译 Flutter Engine（Ubuntu 16.04LST）"></a>Linxu 编译 Flutter Engine（Ubuntu 16.04LST）</h2><ul>
+<li><strong>背景</strong></li>
+</ul>
+<p>最近项目组基于v.1.9.1-hotfix的分支，在研究纯Flutter项目以及Flutter混编项目的动态化，目前Release版本的Flutter产物就只有libapp.so以及libflutter.so，Android天生就是支持替换libapp.so产物的，所以基于这个方向，我们需要通过修改Flutter Engine的代码，然后通过下发diff产物，来合并新的libapp.so产物，通过修改后的Flutter Engine来进行动态切换所要加载的libapp.so。</p>
+<ul>
+<li><strong>为什么选择Linux环境编译</strong></li>
+</ul>
+<p>Windows是不支持Android 或者 IOS的交叉编译，Mac os 支持 Android 以及 IOS的交叉编译，Linux 只支持Android 交叉编译。但是从目前组内的人在Mac os上配置环境，较为繁琐，还需要依赖特定版本的Xcode，而且本人在用Linux上编译的时候，较为顺利，所以在此处，推荐使用Linux环境下进行编译吧，下面就是编译的教程，仅供参考，如有问题，欢迎大家不吝赐教。</p>
+<h4 id="1-需要准备的环境"><a href="#1-需要准备的环境" class="headerlink" title="1. 需要准备的环境"></a>1. 需要准备的环境</h4><p><strong>（1）安装Ubuntu 16.04 环境，如果已经安装的可以忽略，没有的可以参考一下网上的教程。教程链接如下：</strong></p>
+<p><a href="https://blog.csdn.net/flyyufenfei/article/details/79187656" target="_blank" rel="noopener">安装Ubuntu 16.04LTS教程</a></p>
+<p><strong>（2） git环境</strong></p>
+<ul>
+<li>需要配置git名字跟邮箱</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;your name&quot;</span><br><span class="line">git config --global user.email &quot;your email&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>生成秘钥</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your email&quot;</span><br><span class="line">连续一直按回车，成功后提示如下图</span><br></pre></td></tr></table></figure>
+<p><img src="/home/lichaojian/图片/2019-09-16 10-48-39屏幕截图.png" alt></p>
+<p>由于我之前有了秘钥文件，所以这边提示问我是否需要覆盖，如果你们是第一次配置，那还略有差异。这时候可以进入到～/.ssh文件夹当中，会发现有两个文件，一个是id_rsa，一个是id_rsa.pub，pub后缀的为公钥，可以公开的，不带后缀的则为私钥，不能公开的。</p>
+<ul>
+<li><strong>登录github，配置ssh。</strong></li>
+</ul>
+<p>鼠标指到个人头像 —-&gt; Settings ——-&gt; SSH and GPG keys ——–&gt; New SSH key，如下图所以：</p>
+<p><img src="/home/lichaojian/图片/2019-09-16 11-03-28屏幕截图.png" alt></p>
+<p>进入到New SSH key的界面，然后把刚才生成id_rsa.pub文件内容复制进去key的输入框，然后再填写对应这个key是哪一台机器生成的，来于做标识。</p>
+<p><img src="/home/lichaojian/图片/2019-09-16 11-06-34屏幕截图.png" alt></p>
+<p><strong>（3）Chromium 的 depot_tools</strong> </p>
+<ul>
+<li><strong>把depot_tools工具clone下来</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>配置depot_tools的环境变量</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 切换到根目录</span><br><span class="line">1. cd ~/</span><br><span class="line">// 编辑环境变量</span><br><span class="line">2. vim ~/.bashrc</span><br><span class="line">// 把刚才clone下来的depot_tools的路径配置到环境变量当中</span><br><span class="line">3. export PATH=$PATH:/yourpath/depot_tools</span><br></pre></td></tr></table></figure>
+<p><strong>（4）准备好Python环境，这里Ubuntu 16.04-LST是自带Python环境的，所以这里就不要我们去安装了。</strong></p>
+<p><strong>（5）安装curl 以及 unzip，unzip命令是自带的，curl需要手动下载，在ubuntu中，用敲入curl会自动提示你怎么安装，按照提示操作即可，可参考如下命令：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 安装unzip</span><br><span class="line">sudo apt-get install unzip</span><br><span class="line"></span><br><span class="line">// 安装curl</span><br><span class="line">sudo apt-get install curl</span><br></pre></td></tr></table></figure>
+<h4 id="2-设置Flutter-环境"><a href="#2-设置Flutter-环境" class="headerlink" title="2. 设置Flutter 环境"></a>2. 设置Flutter 环境</h4><p><strong>（1）Folk一份Flutter engine的代码，</strong>这里Folk主要是为了方便自己调试使用，如果是用官网的链接，官网的维护更新，可能会导致你这边的代码丢失。folk的地址 ：<a href="https://github.com/flutter/engine" target="_blank" rel="noopener">https://github.com/flutter/engine</a> ，当然你如果仅仅是为了学习，也可以不去folk，直接采用官网的地址。</p>
+<p><strong>（2）新建一个空目录，在此处命名为engine</strong>，当然你也可以更改这个目录的名称，但是官网不建议进行更改，所以我们还是按照engine来进行命名吧。</p>
+<p><strong>（3）在engine目录下，创建一个.gclient文件。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Linux 创建文件命令</span><br><span class="line">1. touch .gclient</span><br><span class="line">// 通过vim编辑该文件，然后进行保存</span><br><span class="line">2. vim .gclient</span><br><span class="line">solutions = [</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;managed&quot;: False,</span><br><span class="line">    &quot;name&quot;: &quot;src/flutter&quot;,</span><br><span class="line">    &quot;url&quot;: &quot;注意：这里替换为你folk后的github仓库地址&quot;,</span><br><span class="line">    &quot;custom_deps&quot;: &#123;&#125;,</span><br><span class="line">    &quot;deps_file&quot;: &quot;DEPS&quot;,</span><br><span class="line">    &quot;safesync_url&quot;: &quot;&quot;,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br><span class="line">// 保存退出</span><br><span class="line">3. Esc + ：wq</span><br></pre></td></tr></table></figure>
+<p><strong>（4）进入到engine目录，通过gclient sync 命令</strong>，这个指令会把源码以及相关的依赖全部拉取下来的，注意！！！！你输入该指令后，你会发现，命令行一直没有动，但是！！！其实已经在下载了（怀疑.jpg）这时候你可以不断查看engine文件夹的大小，发现其实一直在累曾的。但是！！！！！！当你心意若狂的以为出现了 syncing projects：100% （102/102），done的时候，你以为ok了，但是其实不是的，你会发现这个done也是一直卡住在这里了，完成的命令行应该是会跳转到目录带光标的样子的，同样通过查看engine文件夹大小，可以知道其实也是一直在下载东西。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 切换目录</span><br><span class="line">cd /engine/src/flutter</span><br><span class="line"></span><br><span class="line">// 同步engine 代码</span><br><span class="line">gclinet sync</span><br></pre></td></tr></table></figure>
+<p>（5）进入到/engine/src/flutter 通过gclient sync去同步你的项目，这里注意，由于网络环境问题，这里有可能会同步代码失败，所以在这里 ，你需要配置一下网络环境。因为我这边公司是可以直接科学上网，所以没捣鼓这块，有需要的可以参考一下<a href="[https://fucknmb.com/2019/02/26/Flutter-Engine-%E7%BC%96%E8%AF%91%E6%8C%87%E5%8C%97/](https://fucknmb.com/2019/02/26/Flutter-Engine-编译指北/">区长的Flutter Engine 编译指北文章中的配置代理</a>)</p>
+<p>（6）切换回src目录来安装一些编译Android的依赖指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./build/install-build-deps-android.sh</span><br><span class="line">sudo ./build/install-build-deps.sh</span><br><span class="line">sudo ./flutter/build/install-build-deps-linux-desktop.sh</span><br></pre></td></tr></table></figure>
+<p>（7）需要注意的一点是，需要把Flutter SDK 依赖的Engine版本切换到跟你通过gclient sync同步下来的Flutter Engine版本保持一致。值得注意的是，Flutter SDK 以及 /engine/src/flutter 这两个目录并不是同一个目录.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Flutter SDK 目录</span><br><span class="line">/home/lichaojian/Android/flutter</span><br><span class="line"></span><br><span class="line">// Flutter Engine 目录</span><br><span class="line">/home/lichaojian/engine</span><br></pre></td></tr></table></figure>
+<p>这时候，我们需要做的是，查看Flutter SDK 依赖的Engine版本是哪一个版本，那么到哪里看呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 查看Flutter SDK 依赖的 Flutter Engine的版本</span><br><span class="line">cat /home/lichaojian/Android/flutter/bin/internal/engine.version、</span><br><span class="line"></span><br><span class="line">// 获取到Flutter SDK 引用的 Flutter Engine版本如下</span><br><span class="line">28d7900ed767fe88228d2d58b0941544e0f1c680</span><br><span class="line"></span><br><span class="line">// 切换到Flutter Engine 目录，把Flutter Engine的版本切换至同Flutter SDK的版本</span><br><span class="line">cd /home/lichaojian/engine/src/flutter</span><br><span class="line">git reset --hard 28d7900ed767fe88228d2d58b0941544e0f1c680</span><br><span class="line">gclient sync --with_branch_heads --with_tags</span><br></pre></td></tr></table></figure>
+<p>至此，配置Flutter Engine的环境已经配置完毕了，这时候我们就可以去进行Engine的编译过程了。</p>
+<h4 id="3-编译Flutter-Engine"><a href="#3-编译Flutter-Engine" class="headerlink" title="3. 编译Flutter Engine"></a>3. 编译Flutter Engine</h4><ul>
+<li><strong>背景</strong></li>
+</ul>
+<p>Flutter Engine 是基于Ninja进行编译的，关于Ninja，简单来说，就是谷歌创造的一种加快构建速度的构建系统，在这里就不进行展开了，大家有兴趣的话，可以参考一下官方链接 <a href="https://ninja-build.org/" target="_blank" rel="noopener">Ninja介绍</a></p>
+<ul>
+<li><strong>构建</strong></li>
+</ul>
+<p>在这里，需要注意的是，官网的 <a href="https://github.com/flutter/flutter/wiki/Compiling-the-engine" target="_blank" rel="noopener">Compiling the engine</a> 这个链接提到，需要进入到/engine/src/flutter进行拉取代码，并且调用gclient sync，在这里我的建议是，尽可能如果没有对新版本有要求的，尽可能沿用你的当前的版本进行编译。当然如果你想要更新你的engine，但这时候，同样的，你也需要更新你的Flutter SDK，从github上来看，engine 以及 sdk 是分别为两个不同的仓库的，所以他们用的版本很有可能是不一致的，笔者当时同时拉取了engine 以及 sdk master分支下的最新版本，通过构建engine的命令，发现并不会成功，原因是engine 以及 sdk的版本管理并非一致，所以如果需要更新你的engine，此时应该把<strong>设置Flutter Engine 环境的（7）重新的流程走一遍，确保两者版本是一致的</strong></p>
+<p>（1）准备你的构建文件，对应的指令如下，在这里举一个编译Release 版本的 android-arm64的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /engine/src/</span><br><span class="line"></span><br><span class="line">./flutter/tools/gn --android --android-cpu arm64 --runtime-mode=release</span><br><span class="line">./flutter/tools/gn --android-cpu arm64 --runtime-mode=release</span><br></pre></td></tr></table></figure>
+<p>（2）编译可执行文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /engine/src/</span><br><span class="line"></span><br><span class="line">ninja -C out/android_release_arm64 -j 100 &amp;&amp; ninja -C out/host_release_arm64 -j 100</span><br></pre></td></tr></table></figure>
+<h4 id="4-致谢参考链接"><a href="#4-致谢参考链接" class="headerlink" title="4. 致谢参考链接"></a>4. 致谢参考链接</h4><ol>
+<li><a href="https://github.com/flutter/flutter/wiki/Setting-up-the-Engine-development-environment" target="_blank" rel="noopener">Setting up the Engine development environment</a></li>
+<li><a href="https://github.com/flutter/flutter/wiki/Compiling-the-engine" target="_blank" rel="noopener">Compiling the engine</a></li>
+<li><a href="[https://fucknmb.com/2019/02/26/Flutter-Engine-%E7%BC%96%E8%AF%91%E6%8C%87%E5%8C%97/](https://fucknmb.com/2019/02/26/Flutter-Engine-编译指北/">Flutter Engine 编译指北</a>)</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/31/Android中Activity的setContentView做了什么/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -922,7 +1112,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
