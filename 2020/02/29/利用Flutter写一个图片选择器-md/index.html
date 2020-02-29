@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Flutter Image Picker1. 背景想通过一个图片选择器，来上手Flutter开发，关于Android开发者如何上手Flutter开发，这边强力推荐官方的链接：Flutter For Android Developer，里面详细把Android相关的知识点与Flutter对应起来，是入门的好材料。 2. 功能介绍（仅Android端）  支持浏览本机图片  支持查看大图  支持左右滑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用Flutter写一个图片选择器">
+<meta property="og:url" content="http://yoursite.com/2020/02/29/利用Flutter写一个图片选择器-md/index.html">
+<meta property="og:site_name" content="lichaojian&#39;s blogs">
+<meta property="og:description" content="Flutter Image Picker1. 背景想通过一个图片选择器，来上手Flutter开发，关于Android开发者如何上手Flutter开发，这边强力推荐官方的链接：Flutter For Android Developer，里面详细把Android相关的知识点与Flutter对应起来，是入门的好材料。 2. 功能介绍（仅Android端）  支持浏览本机图片  支持查看大图  支持左右滑">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/chaojian/image_picker/master/flutter_image_picker.gif">
+<meta property="og:updated_time" content="2020-02-29T13:07:01.209Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用Flutter写一个图片选择器">
+<meta name="twitter:description" content="Flutter Image Picker1. 背景想通过一个图片选择器，来上手Flutter开发，关于Android开发者如何上手Flutter开发，这边强力推荐官方的链接：Flutter For Android Developer，里面详细把Android相关的知识点与Flutter对应起来，是入门的好材料。 2. 功能介绍（仅Android端）  支持浏览本机图片  支持查看大图  支持左右滑">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chaojian/image_picker/master/flutter_image_picker.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/29/利用Flutter写一个图片选择器-md/">
+
+
+
+
+
+  <title>利用Flutter写一个图片选择器 | lichaojian's blogs</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lichaojian's blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">物质没有给我带来我以为会带给我的幸福</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/29/利用Flutter写一个图片选择器-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lichaojian">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lichaojian's blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利用Flutter写一个图片选择器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-29T21:06:13+08:00">
+                2020-02-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Flutter-Image-Picker"><a href="#Flutter-Image-Picker" class="headerlink" title="Flutter Image Picker"></a>Flutter Image Picker</h1><h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>想通过一个图片选择器，来上手Flutter开发，关于Android开发者如何上手Flutter开发，这边强力推荐官方的链接：<a href="https://flutter.dev/docs/get-started/flutter-for/android-devs" target="_blank" rel="noopener">Flutter For Android Developer</a>，里面详细把Android相关的知识点与Flutter对应起来，是入门的好材料。</p>
+<h2 id="2-功能介绍（仅Android端）"><a href="#2-功能介绍（仅Android端）" class="headerlink" title="2. 功能介绍（仅Android端）"></a>2. 功能介绍（仅Android端）</h2><ul>
+<li style="list-style: none"><input type="checkbox" checked> 支持浏览本机图片</li>
+<li style="list-style: none"><input type="checkbox" checked> 支持查看大图</li>
+<li style="list-style: none"><input type="checkbox" checked> 支持左右滑动浏览大图</li>
+<li style="list-style: none"><input type="checkbox" checked> 支持选中图片，并且最多限制9张</li>
+<li style="list-style: none"><input type="checkbox" checked> 支持查看仅查看已选中的图片</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/chaojian/image_picker/master/flutter_image_picker.gif" alt="flutter_image_picker"></p>
+<h2 id="3-步骤"><a href="#3-步骤" class="headerlink" title="3. 步骤"></a>3. 步骤</h2><p>（1）如何获取到本机的图片<br>在Android开发者的角度，获取图片，就是通过ContentResolver查询数据库，获取到所有的图片路径。那么Flutter应该怎么操作呢？简单的说，Flutter其实就是在于UI的复用，但是如果涉及到平台相关的功能，还是需要写对应平台的Plugin与平台进行通讯。Flutter提供了一种方式，就是通过MethodChannel来进行与平台相关接口的通讯，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">class _MainPageState extends State&lt;MainPage&gt; &#123;</span><br><span class="line">// 定义一个Channel，用于访问平台相关的                                  </span><br><span class="line">  static const platform = MethodChannel(&quot;com.lichaojian.image_picker/Media&quot;);   </span><br><span class="line">  List imageList;                                                               </span><br><span class="line">  final mSelectedImages = new Set&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">  @override                                                                     </span><br><span class="line">  void initState() &#123;                                                            </span><br><span class="line">    super.initState();                                                          </span><br><span class="line">    getImages();                                                                </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">// 获取图片</span><br><span class="line">  void getImages() async &#123;                                                      </span><br><span class="line">    List result;                                                                </span><br><span class="line">    try &#123;    </span><br><span class="line">    // 这里就是获取到所有图片路径的逻辑，通过调用MethodChannel的getImages的方法获取所有的图片                                                                   </span><br><span class="line">      result = await platform.invokeMethod(&apos;getImages&apos;);                        </span><br><span class="line">    &#125; on PlatformException catch (e) &#123;                                          </span><br><span class="line">      log(&quot;PlatformException Message $&#123;e.message&#125;&quot;);                            </span><br><span class="line">    &#125;                                                                           </span><br><span class="line">    setState(() &#123;                                                               </span><br><span class="line">      imageList = result;                                                       </span><br><span class="line">    &#125;);                                                                         </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override                                                                     </span><br><span class="line">  Widget build(BuildContext context) &#123;                                          </span><br><span class="line">    return new Scaffold(                                                        </span><br><span class="line">      appBar: AppBar(                                                           </span><br><span class="line">        title: Text(&quot;Image Picker&quot;),                                            </span><br><span class="line">        actions: &lt;Widget&gt;[buildConfirmButton()],                                </span><br><span class="line">      ),</span><br></pre></td></tr></table></figure>
+<p>上面的代码简述了，在Flutter侧通过MethodChannel的getImages的方法来获取图片，那么这个方法是从哪里进行定义的呢，由于本人是一个Android开发者，所以在这里只阐述怎么定义一个Android的Plugin来与Flutter进行通讯，如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">// 在Android端定义一个Plugin，实现MethodChannel.MethodCallHandler, 复写onMethodCall的方法</span><br><span class="line">class MediaPlugin(flutterActivity: FlutterActivity) : MethodChannel.MethodCallHandler &#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line">        private const val TAG = &quot;MediaPlugin&quot;</span><br><span class="line">        private const val CHANNEL = &quot;com.lichaojian.image_picker/Media&quot;</span><br><span class="line">        private const val GET_IMAGES = &quot;getImages&quot;</span><br><span class="line"></span><br><span class="line">        // 此处需要在FlutterActivity中注册进来</span><br><span class="line">        fun registerMediaPlugin(flutterActivity: FlutterActivity) &#123;</span><br><span class="line">        // Android端创建MethodChannel对象，需要注意的是，这里定义的MethodChannle的名字需要保持与Flutter一致，为了避免冲突，一般是官方推荐使用的是包名+功能            val methodChannel = MethodChannel(flutterActivity.flutterView, CHANNEL)</span><br><span class="line">            methodChannel.setMethodCallHandler(MediaPlugin(flutterActivity))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private var mFlutterActivity = flutterActivity</span><br><span class="line">    private val mImageList  = ArrayList&lt;String&gt;(6000)</span><br><span class="line"></span><br><span class="line">// 当Flutter侧调用平台相关的方法，就会回调到该方法当中</span><br><span class="line">    override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) &#123;</span><br><span class="line">        when (methodCall.method) &#123;</span><br><span class="line">            // 这里就是刚才Flutter调用的getImages方法</span><br><span class="line">            GET_IMAGES -&gt; &#123;</span><br><span class="line">                getImages(result)</span><br><span class="line">            &#125;</span><br><span class="line">            else -&gt; &#123;</span><br><span class="line">                Log.i(TAG, &quot;can&apos;t find the method $&#123;methodCall.method&#125;&quot;)</span><br><span class="line">                result.notImplemented()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">// 这个方法实际上就是通过查询contentResolver来获取到所有的图片的路径。</span><br><span class="line">    private fun getImages(result: MethodChannel.Result) &#123;</span><br><span class="line">        val imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI</span><br><span class="line">        val contentResolver: ContentResolver = mFlutterActivity.contentResolver</span><br><span class="line">        val projection = arrayOf(</span><br><span class="line">            MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.DISPLAY_NAME,</span><br><span class="line">            MediaStore.Images.ImageColumns.SIZE, MediaStore.Images.ImageColumns.DATE_ADDED</span><br><span class="line">        )</span><br><span class="line">        val cursor = contentResolver.query(imageUri, projection, null, null, MediaStore.Images.Media.DATE_ADDED + &quot; desc&quot;)</span><br><span class="line">        if (cursor == null) &#123;</span><br><span class="line">            result.error(&quot;UNAVAILABLE&quot;, &quot;get photos error.&quot;, null)</span><br><span class="line">            return</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            while (cursor.moveToNext()) &#123;</span><br><span class="line">                val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA))</span><br><span class="line">                mImageList.add(path)</span><br><span class="line">            &#125;</span><br><span class="line">            cursor.close()</span><br><span class="line">            result.success(mImageList)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在MainActivity继承FlutterActivity中对Plugin进行注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class MainActivity: FlutterActivity() &#123;</span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        // 注册上面编写的MediaPlugin</span><br><span class="line">        MediaPlugin.registerMediaPlugin(this)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）让图片显示出来<br>获取到本机的所有的图片的时候，这时候，就应该考虑到怎么让图片显示出来，我这里用的是GridView的方式显示，在Flutter当中，创建并且使用一个GridView，可以说是非常的便捷的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Flutter 中如何创建一个GridView</span><br><span class="line">Widget getGridView() &#123;</span><br><span class="line">    return GridView.builder(</span><br><span class="line">      shrinkWrap: true,</span><br><span class="line">      itemCount: imageList.length, //返回GridView的Item的数量</span><br><span class="line">      padding: EdgeInsets.all(10), // 让GridView上下左右都有10个像素的padding</span><br><span class="line">      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">          crossAxisCount: 3,// 每一行有多少个Item</span><br><span class="line">          mainAxisSpacing: 3, // 行距</span><br><span class="line">          crossAxisSpacing: 3,// 列距</span><br><span class="line">          childAspectRatio: 1.0// 缩放倍数，一般为1),</span><br><span class="line">      itemBuilder: (context, index) &#123;</span><br><span class="line">        return buildItem(index);//这里是构建GridView的Item</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>创建GridView的Item，因为这里面，我引入了一些其他的逻辑，例如加入勾选按钮，限制选择的数量为9张等，实际上也是相对简单的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">Widget buildItem(int index) &#123;</span><br><span class="line">    String imagePath = imageList[index];</span><br><span class="line">    bool alreadySelected = mSelectedImages.contains(imagePath);</span><br><span class="line"></span><br><span class="line">    return new GestureDetector( //为了让Item支持点击事件，所以包裹了GestureDetector</span><br><span class="line">      child: Stack( // 这里用Stack，为了达到View的覆盖效果，类似于Android当中我们常用的RelativeLayout</span><br><span class="line">        children: &lt;Widget&gt;[</span><br><span class="line">          new ClipRRect(</span><br><span class="line">            borderRadius: BorderRadius.circular(3),</span><br><span class="line">            // 这里是真正加载图片的地方，就这么一句话就可以完成图片的加载</span><br><span class="line">            child: Image.file(File(imagePath),</span><br><span class="line">                width: 200, height: 200, cacheWidth: 200, cacheHeight: 200),</span><br><span class="line">          ),</span><br><span class="line">          // 放在左下方的勾选框</span><br><span class="line">          new Align(</span><br><span class="line">            alignment: Alignment.bottomRight,</span><br><span class="line">            child: Checkbox(</span><br><span class="line">              value: alreadySelected,</span><br><span class="line">              onChanged: (newValue) &#123;</span><br><span class="line">                if (mSelectedImages.length == 9 &amp;&amp; !alreadySelected) &#123;</span><br><span class="line">                  Fluttertoast.showToast(</span><br><span class="line">                      msg: &quot;你最多只能选择9张图片&quot;,</span><br><span class="line">                      toastLength: Toast.LENGTH_LONG,</span><br><span class="line">                      gravity: ToastGravity.BOTTOM,</span><br><span class="line">                      timeInSecForIos: 1,</span><br><span class="line">                      backgroundColor: Colors.black54,</span><br><span class="line">                      textColor: Colors.white,</span><br><span class="line">                      fontSize: 16.0);</span><br><span class="line">                  return;</span><br><span class="line">                &#125;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  if (alreadySelected) &#123;</span><br><span class="line">                    mSelectedImages.remove(imagePath);</span><br><span class="line">                  &#125; else &#123;</span><br><span class="line">                    mSelectedImages.add(imagePath);</span><br><span class="line">                  &#125;</span><br><span class="line"></span><br><span class="line">                  alreadySelected = newValue;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">              autofocus: false,</span><br><span class="line">              tristate: true,</span><br><span class="line">              activeColor: Colors.blueGrey,</span><br><span class="line">              checkColor: Colors.green,</span><br><span class="line">              materialTapTargetSize: MaterialTapTargetSize.padded,</span><br><span class="line">            ),</span><br><span class="line">          )</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">      // Item的点击事件</span><br><span class="line">      onTap: () &#123;</span><br><span class="line">        Navigator.push(context, MaterialPageRoute(builder: (_) &#123;</span><br><span class="line">          return BrowseImagesPage(index, imageList);</span><br><span class="line">        &#125;));</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+<p>（3）页面跳转<br>看（2）中的点击事件，可以看出点击事件，是怎么回事，Flutter当中的页面跳转，可以用Navigator and Routes来实现页面跳转，效果跟Activity是一致的，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Navigator.push(context, MaterialPageRoute(builder: (_) &#123;</span><br><span class="line">          return BrowseImagesPage(index, imageList);</span><br></pre></td></tr></table></figure>
+<p>（4）滑动浏览图片<br>作为一个Android开发者，滑动浏览图片，我们最先应该是想到类似我们Banner一样用到的ViewPage，在Flutter当中，也有跟ViewPage一样的控件，那就是PageView，PageView的用法也是相当的简单，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Widget getPageView(index) &#123;</span><br><span class="line">    // 定义一个Controller，index为初始进去的Page的index</span><br><span class="line">    PageController _transController = new PageController(initialPage: index);</span><br><span class="line">    return PageView.builder(</span><br><span class="line">        controller: _transController,</span><br><span class="line">        itemCount: mImageList.length,// 可滑动Page的页数</span><br><span class="line">        itemBuilder: (context, index) &#123;</span><br><span class="line">          return Image.file(File(mImageList[index]));//加载图片</span><br><span class="line">        &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-结语"><a href="#4-结语" class="headerlink" title="4. 结语"></a>4. 结语</h2><p>通过这一个小小的Demo，可以看出，Flutter在UI方面的编写特别“节省代码”，通过短短的几行代码，就能实现很不错的效果。同样的，附上本文的Demo的Github地址：<a href="https://github.com/chaojian/image_picker" target="_blank" rel="noopener">Flutter_Image_Picker</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/07/Ubuntu 16.04 编译Flutter Engine/" rel="next" title="Ubuntu 16.04 编译Flutter Engine.md">
+                <i class="fa fa-chevron-left"></i> Ubuntu 16.04 编译Flutter Engine.md
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lichaojian</p>
+              <p class="site-description motion-element" itemprop="description">请永远保持你的好奇心</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flutter-Image-Picker"><span class="nav-number">1.</span> <span class="nav-text">Flutter Image Picker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-背景"><span class="nav-number">1.1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-功能介绍（仅Android端）"><span class="nav-number">1.2.</span> <span class="nav-text">2. 功能介绍（仅Android端）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-步骤"><span class="nav-number">1.3.</span> <span class="nav-text">3. 步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-结语"><span class="nav-number">1.4.</span> <span class="nav-text">4. 结语</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lichaojian</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
